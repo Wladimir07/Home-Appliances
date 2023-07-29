@@ -1,6 +1,7 @@
 package aparati.web.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,16 @@ public class AparatController {
 		
 		List<Aparat> aparati = aparatService.getAll();
 		return new ResponseEntity<>(toDto.convert(aparati), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	ResponseEntity<AparatDto> getOne(@PathVariable Long id) {
+		Optional<Aparat> aparat= aparatService.one(id);
+		if (!aparat.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(toDto.convert(aparat.get()), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
